@@ -1,3 +1,3 @@
-# optmeth — we know how to optimize!
+# methopt — we know how to optimize!
 
-If you are a developer, please refer to <file:contributing.md>
+If you are a developer, please refer to [contributing.md](contributing.md)

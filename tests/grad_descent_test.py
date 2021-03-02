@@ -1,4 +1,4 @@
-from optmeth.grad_descent import grad_descent
+from methopt.grad_descent import grad_descent
 
 EPS = 1e-7
 
