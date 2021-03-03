@@ -1,0 +1,9 @@
+eps,dichotomy_iterations,dichotomy_function_calls,golden_section_iterations,golden_section_function_calls,fibonacci_iterations,fibonacci_function_calls,"f(x) = -x, a = 0, b = 100"
+0.5,7,14,10,11,12,13,
+0.1,9,18,13,14,15,16,
+0.01,13,26,18,19,20,21,
+0.001,16,32,23,24,25,26,
+0.0001,19,38,28,29,29,30,
+1e-05,23,46,33,34,34,35,
+1e-06,26,52,37,38,39,40,
+1e-07,30,60,42,43,44,45,

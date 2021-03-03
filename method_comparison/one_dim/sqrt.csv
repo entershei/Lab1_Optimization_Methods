@@ -1,0 +1,9 @@
+eps,dichotomy_iterations,dichotomy_function_calls,golden_section_iterations,golden_section_function_calls,fibonacci_iterations,fibonacci_function_calls,"f(x) = sqrt(x + 1), a = -1, b = 500"
+0.5,9,18,13,14,15,16,
+0.1,12,24,17,18,18,19,
+0.01,15,30,22,23,23,24,
+0.001,18,36,26,27,28,29,
+0.0001,22,44,31,32,33,34,
+1e-05,25,50,36,37,37,38,
+1e-06,28,56,41,42,42,43,
+1e-07,32,64,45,46,47,48,
