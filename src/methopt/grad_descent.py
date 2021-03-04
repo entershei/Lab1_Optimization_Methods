@@ -1,3 +1,5 @@
+import numpy as np
+
 import methopt.step_adjustment_strategy as strat
 
 
@@ -9,6 +11,7 @@ def grad_descent(
     step_adjustment_strategy="divide_step",
     initial_step=1,
     eps=None,
+    stopping_criterion=None,
 ):
     """Find an approximation of a local minimum of the function.
 
@@ -31,6 +34,13 @@ def grad_descent(
 
     'eps' — a margin for floating-point comparisons, default is 1e-7
 
+    'stopping_criterion' — a criterion for when to stop
+    searching. Possible values: "argument_margin" — stop when a
+    distance between consecutive points is smaller than 'eps',
+    "function_margin" — stop when a distance between consecutive
+    function values is smaller than 'eps', "n_iterations" — stop after
+    'max_iterations_count' iterations. Default is "function_margin".
+
     """
 
     if eps is None:
@@ -43,14 +53,23 @@ def grad_descent(
             f"Unknown step adjustment strategy: {step_adjustment_strategy}"
         )
 
+    if stopping_criterion is None or stopping_criterion == "function_margin":
+        is_finished = lambda x, x_new: abs(f(x) - f(x_new)) < eps
+    elif stopping_criterion == "argument_margin":
+        is_finished = lambda x, x_new: np.linalg.norm(x - x_new) < eps
+    elif stopping_criterion == "n_iterations":
+        # we do "max_iterations_count" anyway
+        is_finished = lambda x, x_new: False
+    else:
+        raise GradDescentException(f"Unknown stopping_criterion: {stopping_criterion}")
+
     x = x0
     step_prev = initial_step
     for iteration_no in range(max_iterations_count):
         step = step_adjustment_strategy(x, step_prev, iteration_no)
         x_new = x - step * f_grad(x)
 
-        # TODO add a function parameter to choose a stopping criterion
-        if abs(x - x_new) < eps:
+        if is_finished(x, x_new):
             break
 
         step_prev = step

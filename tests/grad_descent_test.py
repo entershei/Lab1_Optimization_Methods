@@ -25,7 +25,13 @@ def test_grad_descent_dichotomy():
 
     strategy = step.DichotomyStrategy(f, f_grad, max_step=1000, max_steps=20, eps=1e-8)
     assert approx_equal(
-        grad_descent(f, f_grad, x0, step_adjustment_strategy=strategy),
+        grad_descent(
+            f,
+            f_grad,
+            x0,
+            step_adjustment_strategy=strategy,
+            stopping_criterion="function_margin",
+        ),
         3,
         eps=1e-4,  # it does not perform well -_-. so we set a lower correctness margin
     )
@@ -40,7 +46,14 @@ def test_grad_descent_golden_section():
         f, f_grad, max_step=1000, max_steps=20, eps=1e-8
     )
     assert approx_equal(
-        grad_descent(f, f_grad, x0, step_adjustment_strategy=strategy), 3
+        grad_descent(
+            f,
+            f_grad,
+            x0,
+            step_adjustment_strategy=strategy,
+            stopping_criterion="argument_margin",
+        ),
+        3,
     )
 
 
@@ -51,5 +64,12 @@ def test_grad_descent_fibonacci():
 
     strategy = step.FibonacciStrategy(f, f_grad, max_step=1000, max_steps=20, eps=1e-8)
     assert approx_equal(
-        grad_descent(f, f_grad, x0, step_adjustment_strategy=strategy), 3
+        grad_descent(
+            f,
+            f_grad,
+            x0,
+            step_adjustment_strategy=strategy,
+            stopping_criterion="argument_margin",
+        ),
+        3,
     )
