@@ -73,3 +73,29 @@ def test_grad_descent_fibonacci():
         ),
         3,
     )
+
+
+def test_grad_descent_iteration_callback():
+    f = lambda x: x ** 2 - 5
+    f_grad = lambda x: 2 * x
+    x0 = 8
+
+    max_iterations_count = 50
+
+    trajectory = []
+    iteration_callback = lambda x, **kwargs: trajectory.append((x, f(x)))
+
+    grad_descent(
+        f,
+        f_grad,
+        x0,
+        max_iterations_count=max_iterations_count,
+        stopping_criterion="n_iterations",
+        iteration_callback=iteration_callback,
+    )
+
+    assert len(trajectory) == max_iterations_count
+
+    last_x, last_fx = trajectory[-1]
+    assert approx_equal(last_x, 0)
+    assert approx_equal(last_fx, -5)

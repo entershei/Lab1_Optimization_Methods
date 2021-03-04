@@ -12,6 +12,7 @@ def grad_descent(
     initial_step=1,
     eps=None,
     stopping_criterion=None,
+    iteration_callback=None,
 ):
     """Find an approximation of a local minimum of the function.
 
@@ -41,6 +42,16 @@ def grad_descent(
     function values is smaller than 'eps', "n_iterations" — stop after
     'max_iterations_count' iterations. Default is "function_margin".
 
+    'iteration_callback' — a function from (x, iteration_no) where x
+    is a point in the search space at the current iteration
+    #iteration_no. Please note that the function is going to be called
+    with named arguments, so name them as specified here. Default is
+    no-op.
+
+    Example: `iteration_callback=lambda x, **kwargs: print(x, f(x))`.
+
+    Note that we use **kwargs to ignore arguments that we don't need.
+
     """
 
     if eps is None:
@@ -63,9 +74,13 @@ def grad_descent(
     else:
         raise GradDescentException(f"Unknown stopping_criterion: {stopping_criterion}")
 
+    if iteration_callback is None:
+        iteration_callback = lambda **kwargs: ()  # no-op
+
     x = x0
     step_prev = initial_step
     for iteration_no in range(max_iterations_count):
+        iteration_callback(x=x, iteration_no=iteration_no)
         step = step_adjustment_strategy(x, step_prev, iteration_no)
         x_new = x - step * f_grad(x)
 
