@@ -1,0 +1,9 @@
+eps,dichotomy_iterations,dichotomy_function_calls,golden_section_iterations,golden_section_function_calls,fibonacci_iterations,fibonacci_function_calls,"f(x) = (x - 1) / (1 - x^3), a = -1, b = 1"
+0.5,2,4,2,3,4,5,
+0.1,4,8,5,6,7,8,
+0.01,7,14,10,11,12,13,
+0.001,10,20,15,16,16,17,
+0.0001,14,28,20,21,21,22,
+1e-05,17,34,24,25,26,27,
+1e-06,20,40,29,30,31,32,
+1e-07,24,48,34,35,36,37,
