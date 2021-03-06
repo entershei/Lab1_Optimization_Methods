@@ -81,8 +81,6 @@ def grad_descent(
     step_prev = initial_step
     for iteration_no in range(max_iterations_count):
         iteration_callback(x=x, iteration_no=iteration_no)
-        if iteration_no == 0:
-            print(f"{x=} {step_prev=}")
         step = step_adjustment_strategy(x, step_prev, iteration_no)
         assert step >= 0
         x_new = x - step * f_grad(x)
