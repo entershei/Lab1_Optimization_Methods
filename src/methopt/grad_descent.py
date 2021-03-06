@@ -40,7 +40,7 @@ def grad_descent(
     distance between consecutive points is smaller than 'eps',
     "function_margin" — stop when a distance between consecutive
     function values is smaller than 'eps', "n_iterations" — stop after
-    'max_iterations_count' iterations. Default is "function_margin".
+    'max_iterations_count' iterations. Default is "argument_margin".
 
     'iteration_callback' — a function from (x, iteration_no) where x
     is a point in the search space at the current iteration
@@ -64,10 +64,10 @@ def grad_descent(
             f"Unknown step adjustment strategy: {step_adjustment_strategy}"
         )
 
-    if stopping_criterion is None or stopping_criterion == "function_margin":
-        is_finished = lambda x, x_new: abs(f(x) - f(x_new)) < eps
-    elif stopping_criterion == "argument_margin":
+    if stopping_criterion is None or stopping_criterion == "argument_margin":
         is_finished = lambda x, x_new: np.linalg.norm(x - x_new) < eps
+    elif stopping_criterion == "function_margin":
+        is_finished = lambda x, x_new: abs(f(x) - f(x_new)) < eps
     elif stopping_criterion == "n_iterations":
         # we do "max_iterations_count" anyway
         is_finished = lambda x, x_new: False
@@ -81,7 +81,10 @@ def grad_descent(
     step_prev = initial_step
     for iteration_no in range(max_iterations_count):
         iteration_callback(x=x, iteration_no=iteration_no)
+        if iteration_no == 0:
+            print(f"{x=} {step_prev=}")
         step = step_adjustment_strategy(x, step_prev, iteration_no)
+        assert step >= 0
         x_new = x - step * f_grad(x)
 
         if is_finished(x, x_new):

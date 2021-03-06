@@ -99,3 +99,58 @@ def test_grad_descent_iteration_callback():
     last_x, last_fx = trajectory[-1]
     assert approx_equal(last_x, 0)
     assert approx_equal(last_fx, -5)
+
+
+def test_grad_descent_far_initial_point():
+    MIN_POINT = 8
+    MIN_VALUE = -6
+    f = lambda x: (x - MIN_POINT) ** 2 + MIN_VALUE
+    f_grad = lambda x: 2 * (x - MIN_POINT)
+    x0 = 1000
+
+    max_step = 1000
+    step_adjustment_strategy = step.GoldenSectionStrategy(f, f_grad, max_step)
+    res = grad_descent(
+        f,
+        f_grad,
+        x0,
+        max_iterations_count=10000,
+        step_adjustment_strategy=step_adjustment_strategy,
+        stopping_criterion="function_margin",
+    )
+
+    assert approx_equal(res, MIN_POINT, eps=1e-4)
+
+
+def test_on_inverse_hyperbole():
+    # long story short: if you can afford, use argument_margin instead
+    # of function_margin
+
+    # vanishing gradient is at play here with dichotomy…
+
+    f = lambda x: -1 / (x ** 2 + x + 1)
+    f_grad = lambda x: (2 * x + 1) / (x ** 2 + x + 1) ** 2
+    x0 = 1
+
+    actual_res = -1 / 2
+
+    res1 = grad_descent(
+        f,
+        f_grad,
+        x0,
+        step_adjustment_strategy=step.DivideStepStrategy(f, f_grad),
+    )
+
+    assert approx_equal(res1, actual_res)
+
+    max_step = 1000
+    res2 = grad_descent(
+        f,
+        f_grad,
+        x0,
+        step_adjustment_strategy=step.DichotomyStrategy(
+            f, f_grad, max_step, max_steps=30
+        ),
+    )
+
+    assert approx_equal(res2, actual_res)

@@ -63,7 +63,7 @@ class OneDimOptimizationStrategy(StepAdjustmentStrategy):
         super().__init__(f, f_grad, eps)
 
         if max_steps is None:
-            max_steps = 10
+            max_steps = 30
 
         self.max_step = max_step
         self.max_steps = max_steps
@@ -112,7 +112,7 @@ class FibonacciStrategy(OneDimOptimizationStrategy):
         fibo = [0 for _ in range(self.max_steps + 1)]  # memoize fibonacci numbers
         fibo[0] = 1
         fibo[1] = 1
-        impl.compute_fibonacci(max_steps, fibo)
+        impl.compute_fibonacci(self.max_steps, fibo)
         self.opt_method = lambda *args, **kwargs: impl.fibonacci_method(
             *args, **kwargs, fibonacci=fibo
         )
