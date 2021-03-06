@@ -1,4 +1,5 @@
 /tests/__pycache__/
+/src
 *.egg-info
 /dist/
 .idea/
