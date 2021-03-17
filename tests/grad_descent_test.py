@@ -153,4 +153,4 @@ def test_on_inverse_hyperbole():
         ),
     )
 
-    assert approx_equal(res2, actual_res)
+    assert approx_equal(res2, actual_res, 1e-4)
