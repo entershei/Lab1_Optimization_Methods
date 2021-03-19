@@ -27,14 +27,14 @@ class DivideStepStrategy:
 
 
 def newtons_method(
-        f,
-        f_H,
-        f_grad,
-        x0,
-        initial_step=1,
-        eps=1e-7,
-        max_iterations_count=1000,
-        iteration_callback=None
+    f,
+    f_H,
+    f_grad,
+    x0,
+    initial_step=1,
+    eps=1e-7,
+    max_iterations_count=1000,
+    iteration_callback=None,
 ):
     def call_on_H(H, x):
         res = np.zeros(H.shape)
@@ -62,9 +62,7 @@ def newtons_method(
         # f(x_prev) doesn't affect min's coordinates
         # min(psi(x)) = x_wave + x_prev
         x_wave = conjugate_direction_method(
-            call_on_H(f_H, x_prev),
-            call_on_grad(f_grad, x_prev),
-            x0
+            call_on_H(f_H, x_prev), call_on_grad(f_grad, x_prev), x0
         )
         step = step_adjustment_strategy(x_prev, x_wave, step_prev, k)
         # xk = x_prev + step((x_wave + x_prev) - x_prev)

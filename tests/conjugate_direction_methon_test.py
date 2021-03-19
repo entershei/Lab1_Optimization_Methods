@@ -46,7 +46,7 @@ def test3():
     # f = x^2 + z^2
     Q = [
         [2, 0],
-        [0, 2]
+        [0, 2],
     ]
     b = [0, 0]
     x0 = [10, 10]
@@ -60,7 +60,7 @@ def test4():
     # f = x^2 + z^2 + x
     Q = [
         [2, 0],
-        [0, 2]
+        [0, 2],
     ]
     b = [1, 0]
     x0 = [10, 10]
@@ -74,7 +74,7 @@ def test5():
     # f = 2x^2 + z^2 + x
     Q = [
         [4, 0],
-        [0, 2]
+        [0, 2],
     ]
     b = [1, 0]
     x0 = [10, 10]
@@ -86,8 +86,10 @@ def test5():
 
 def test6():
     # f = x^2 + 5z^2 + 4xz + x
-    Q = [[2, 4],
-         [4, 10]]
+    Q = [
+        [2, 4],
+        [4, 10],
+    ]
     b = [1, 0]
     x0 = [10, 10]
 
@@ -98,8 +100,10 @@ def test6():
 
 def test_iteration_callback():
     # f = x^2 + 5z^2 + 4xz + x
-    Q = [[2, 4],
-         [4, 10]]
+    Q = [
+        [2, 4],
+        [4, 10],
+    ]
     b = [1, 0]
     x0 = [0, 0]
 
@@ -112,7 +116,7 @@ def test_iteration_callback():
         np.array(Q),
         np.array(b),
         np.array(x0),
-        iteration_callback=iteration_callback
+        iteration_callback=iteration_callback,
     )
 
     first_x, first_fx = trajectory[0]

@@ -2,11 +2,11 @@ import numpy as np
 
 
 def conjugate_direction_method(
-        Q,
-        b,
-        x0,
-        max_iterations_count=1000,  # todo: I think it isn't needed
-        iteration_callback=None
+    Q,
+    b,
+    x0,
+    max_iterations_count=1000,  # todo: I think it isn't needed
+    iteration_callback=None,
 ):
     # f(x) = 0.5 (Qx, x) + (b, x)
     if iteration_callback is None:
@@ -30,13 +30,11 @@ def conjugate_direction_method(
     h_prev = h1
     for k in range(1, max_iterations_count):
         wk = w_prev - h_prev * (Q @ p_prev)
-        yk = np.dot(Q @ p_prev, wk) / \
-             np.dot(Q @ p_prev, p_prev)
+        yk = np.dot(Q @ p_prev, wk) / np.dot(Q @ p_prev, p_prev)
         pk = wk - yk * p_prev
         if np.linalg.norm(pk) == 0:
             return x_prev
-        hk = np.dot(wk, pk) / \
-             np.dot(Q @ pk, pk)
+        hk = np.dot(wk, pk) / np.dot(Q @ pk, pk)
         xk = x_prev + hk * pk
         iteration_callback(x=xk, iteration_no=k)
 
