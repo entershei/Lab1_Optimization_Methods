@@ -33,7 +33,8 @@ def newtons_method(
         x0,
         initial_step=1,
         eps=1e-7,
-        iterations_num=1000
+        max_iterations_count=1000,
+        iteration_callback=None
 ):
     def call_on_H(H, x):
         res = np.zeros(H.shape)
@@ -47,11 +48,16 @@ def newtons_method(
         for i in range(grad.shape[0]):
             res[i] = grad[i](x)
         return res
+
+    if iteration_callback is None:
+        iteration_callback = lambda **kwargs: ()
+
     step_adjustment_strategy = DivideStepStrategy(f, eps)
     step_prev = initial_step
     f_prev = f(x0)
     x_prev = x0
-    for k in range(iterations_num):
+    iteration_callback(x=x0, iteration_no=0)
+    for k in range(1, max_iterations_count):
         # psi(x) = (H(x_prev)(x - x_prev),x - x_prev) + (grad(x_prev), x - x_prev) + f(x_prev)
         # f(x_prev) doesn't affect min's coordinates
         # min(psi(x)) = x_wave + x_prev
@@ -63,6 +69,7 @@ def newtons_method(
         step = step_adjustment_strategy(x_prev, x_wave, step_prev, k)
         # xk = x_prev + step((x_wave + x_prev) - x_prev)
         xk = x_prev + step * x_wave
+        iteration_callback(x=xk, iteration_no=k)
         fk = f(xk)
         if np.all(abs(f_prev - fk) < eps):
             return xk
