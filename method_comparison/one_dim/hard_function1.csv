@@ -1,0 +1,9 @@
+eps,dichotomy_iterations,dichotomy_function_calls,golden_section_iterations,golden_section_function_calls,fibonacci_iterations,fibonacci_function_calls,"f(x) = (x - 1) / (1 - x^3), a = -500, b = 500"
+0.5,10,20,15,16,16,17,
+0.1,13,26,18,19,20,21,
+0.01,16,32,23,24,25,26,
+0.001,19,38,28,29,29,30,
+0.0001,23,46,33,34,34,35,
+1e-05,26,52,37,38,39,40,
+1e-06,29,58,42,43,44,45,
+1e-07,33,66,47,48,48,49,
