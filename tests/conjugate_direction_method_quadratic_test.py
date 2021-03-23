@@ -1,6 +1,6 @@
 import numpy as np
 
-from methopt.conjugate_direction_method import conjugate_direction_method
+from methopt.conjugate_direction_method import conjugate_direction_method_for_quadratic
 
 EPS = 1e-7
 
@@ -15,7 +15,7 @@ def test1():
     b = [0]
     x0 = [-6]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [0])
 
@@ -26,7 +26,7 @@ def test2():
     b = [20]
     x0 = [0]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [-10])
 
@@ -37,7 +37,7 @@ def test2():
     b = [-100]
     x0 = [0]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [5])
 
@@ -51,7 +51,7 @@ def test3():
     b = [0, 0]
     x0 = [10, 10]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [0, 0])
 
@@ -65,7 +65,7 @@ def test4():
     b = [1, 0]
     x0 = [10, 10]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [-0.5, 0])
 
@@ -79,7 +79,7 @@ def test5():
     b = [1, 0]
     x0 = [10, 10]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [-0.25, 0])
 
@@ -93,7 +93,7 @@ def test6():
     b = [1, 0]
     x0 = [10, 10]
 
-    res = conjugate_direction_method(np.array(Q), np.array(b), np.array(x0))
+    res = conjugate_direction_method_for_quadratic(np.array(Q), np.array(b), np.array(x0))
     print(res)
     assert approx_equal(res, [-2.5, 1])
 
@@ -112,7 +112,7 @@ def test_iteration_callback():
     trajectory = []
     iteration_callback = lambda x, **kwargs: trajectory.append((x, f(x)))
 
-    conjugate_direction_method(
+    conjugate_direction_method_for_quadratic(
         np.array(Q),
         np.array(b),
         np.array(x0),

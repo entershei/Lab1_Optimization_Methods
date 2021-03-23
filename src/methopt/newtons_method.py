@@ -1,6 +1,7 @@
 import numpy as np
 
-from methopt.conjugate_direction_method import conjugate_direction_method
+from methopt.conjugate_direction_method import \
+    conjugate_direction_method_for_quadratic
 
 
 class DivideStepStrategy:
@@ -27,14 +28,14 @@ class DivideStepStrategy:
 
 
 def newtons_method(
-    f,
-    f_H,
-    f_grad,
-    x0,
-    initial_step=1,
-    eps=1e-7,
-    max_iterations_count=1000,
-    iteration_callback=None,
+        f,
+        f_H,
+        f_grad,
+        x0,
+        initial_step=1,
+        eps=1e-7,
+        max_iterations_count=1000,
+        iteration_callback=None,
 ):
     def call_on_H(H, x):
         res = np.zeros(H.shape)
@@ -58,10 +59,11 @@ def newtons_method(
     x_prev = x0
     iteration_callback(x=x0, iteration_no=0)
     for k in range(1, max_iterations_count):
-        # psi(x) = (H(x_prev)(x - x_prev),x - x_prev) + (grad(x_prev), x - x_prev) + f(x_prev)
+        # psi(x) = (H(x_prev)(x - x_prev),x - x_prev)
+        #        + (grad(x_prev), x - x_prev) + f(x_prev)
         # f(x_prev) doesn't affect min's coordinates
         # min(psi(x)) = x_wave + x_prev
-        x_wave = conjugate_direction_method(
+        x_wave = conjugate_direction_method_for_quadratic(
             call_on_H(f_H, x_prev), call_on_grad(f_grad, x_prev), x0
         )
         step = step_adjustment_strategy(x_prev, x_wave, step_prev, k)
