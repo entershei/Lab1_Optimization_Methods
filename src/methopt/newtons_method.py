@@ -32,24 +32,11 @@ def newtons_method(
         f_H,
         f_grad,
         x0,
-        initial_step=1,
-        eps=1e-7,
         max_iterations_count=1000,
         iteration_callback=None,
+        eps=1e-7,
+        initial_step=1
 ):
-    def call_on_H(H, x):
-        res = np.zeros(H.shape)
-        for i in range(H.shape[0]):
-            for j in range(H.shape[1]):
-                res[i][j] = H[i][j](x)
-        return res
-
-    def call_on_grad(grad, x):
-        res = np.zeros(grad.shape)
-        for i in range(grad.shape[0]):
-            res[i] = grad[i](x)
-        return res
-
     if iteration_callback is None:
         iteration_callback = lambda **kwargs: ()
 
@@ -64,7 +51,7 @@ def newtons_method(
         # f(x_prev) doesn't affect min's coordinates
         # min(psi(x)) = x_wave + x_prev
         x_wave = conjugate_direction_method_for_quadratic(
-            call_on_H(f_H, x_prev), call_on_grad(f_grad, x_prev), x0
+            f_H(x_prev), f_grad(x_prev), x0
         )
         step = step_adjustment_strategy(x_prev, x_wave, step_prev, k)
         # xk = x_prev + step((x_wave + x_prev) - x_prev)
