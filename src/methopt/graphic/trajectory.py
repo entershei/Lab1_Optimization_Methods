@@ -36,7 +36,7 @@ def draw_2d(f, f_grad, x0, title, step_adjustment_strategy=None):
     plt.suptitle(title, fontsize=16)
     plt.xlabel("x", fontsize=12)
     plt.ylabel("y", fontsize=12)
-    plt.savefig(f"images/{title}.jpg")
+    plt.savefig(f"images/grad-descent/{title}.jpg")
     plt.close()
 
 

@@ -1,7 +1,6 @@
 import numpy as np
 
-from methopt.conjugate_direction_method import \
-    conjugate_direction_method_for_quadratic
+from methopt.conjugate_direction_method import conjugate_direction_method_for_quadratic
 
 
 class DivideStepStrategy:
@@ -28,14 +27,14 @@ class DivideStepStrategy:
 
 
 def newtons_method(
-        f,
-        f_H,
-        f_grad,
-        x0,
-        max_iterations_count=1000,
-        iteration_callback=None,
-        eps=1e-7,
-        initial_step=1
+    f,
+    f_H,
+    f_grad,
+    x0,
+    max_iterations_count=1000,
+    iteration_callback=None,
+    eps=1e-7,
+    initial_step=1,
 ):
     if iteration_callback is None:
         iteration_callback = lambda **kwargs: ()
