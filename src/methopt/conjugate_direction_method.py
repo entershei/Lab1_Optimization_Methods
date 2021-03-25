@@ -75,12 +75,12 @@ def conjugate_direction_method(
     for k in range(1, max_iterations_count):
         psi = lambda chi: f(x_prev + chi * p_prev)
         grad_psi = lambda chi: np.dot(f_grad(x_prev + chi * p_prev), p_prev)
-        hk = grad_descent(psi, grad_psi, np.array([0]), eps=1e-7)
+        hk = grad_descent(psi, grad_psi, 0, eps=1e-11)
         xk = x_prev + hk * p_prev
         iteration_callback(x=xk, iteration_no=k)
         wk = -f_grad(xk)
 
-        if np.linalg.norm(wk) < eps:
+        if abs(np.linalg.norm(wk)) < eps:
             return xk
 
         if k % 100 == 0:
