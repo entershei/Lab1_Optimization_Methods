@@ -48,7 +48,7 @@ def draw_2d(formula: str, f, f_grad, f_H, x0, comment: str = None):
     min_y, max_y = LIMIT, -LIMIT
     for method, marker in zip(methods, markers_cycle()):
         points = draw_trajectory_with_method(
-            method, marker, f=f, f_grad=f_grad, f_H=f_H, x0=x0
+            method, marker, f=f, f_grad=f_grad, f_H=f_H, x0=x0, eps=1e-3
         )
         points = filter(in_limits, points)
         xs, ys = zip(*points)
@@ -178,7 +178,7 @@ def draw_f5():
 
 
 def draw_f6():
-    # f = 100(z - x^2)^2 + (1 - x)^2 (rosenbrok)
+    # f = 100(y - x^2)^2 + (1 - x)^2 (rosenbrok)
     f = lambda x: 100 * (x[1] - x[0] ** 2) ** 2 + (1 - x[0]) ** 2
     f_grad = lambda x: np.array(
         [
@@ -195,7 +195,7 @@ def draw_f6():
         dtype="float64",
     )
     x0 = np.array([1.2, -1.5])
-    draw_2d("100(z - x^2)^2 + (1 - x)^2", f, f_grad, f_H, x0, comment="rosenbrok")
+    draw_2d("100(y - x^2)^2 + (1 - x)^2", f, f_grad, f_H, x0, comment="rosenbrok")
 
 
 def draw_f7():
