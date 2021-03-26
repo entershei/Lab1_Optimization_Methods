@@ -4,15 +4,19 @@ from methopt.grad_descent import grad_descent
 
 
 def conjugate_direction_method_for_quadratic(
-        Q,
-        b,
-        x0,
-        max_iterations_count=1000,
-        iteration_callback=None
+    Q,
+    b,
+    x0,
+    max_iterations_count=1000,
+    iteration_callback=None,
+    eps=None,
 ):
     # f(x) = 0.5 (Qx, x) + (b, x)
     if iteration_callback is None:
         iteration_callback = lambda **kwargs: ()
+
+    if eps is None:
+        eps = 1e-8
 
     if np.all(b == 0):
         iteration_callback(x=b, iteration_no=0)
@@ -34,7 +38,7 @@ def conjugate_direction_method_for_quadratic(
         wk = w_prev - h_prev * (Q @ p_prev)
         yk = np.dot(Q @ p_prev, wk) / np.dot(Q @ p_prev, p_prev)
         pk = wk - yk * p_prev
-        if np.linalg.norm(pk) == 0:
+        if abs(np.linalg.norm(pk)) < eps:
             return x_prev
         hk = np.dot(wk, pk) / np.dot(Q @ pk, pk)
         xk = x_prev + hk * pk
@@ -48,12 +52,12 @@ def conjugate_direction_method_for_quadratic(
 
 
 def conjugate_direction_method(
-        f,
-        f_grad,
-        x0,
-        max_iterations_count=1000,
-        iteration_callback=None,
-        eps=1e-7  # Search accuracy
+    f,
+    f_grad,
+    x0,
+    max_iterations_count=1000,
+    iteration_callback=None,
+    eps=1e-7,  # Search accuracy
 ):
     if iteration_callback is None:
         iteration_callback = lambda **kwargs: ()
@@ -70,14 +74,13 @@ def conjugate_direction_method(
     p_prev = p1
     for k in range(1, max_iterations_count):
         psi = lambda chi: f(x_prev + chi * p_prev)
-        grad_psi = lambda chi: np.dot(f_grad(x_prev + chi * p_prev),
-                                      p_prev)
-        hk = grad_descent(psi, grad_psi, np.array([0]), eps=1e-7)
+        grad_psi = lambda chi: np.dot(f_grad(x_prev + chi * p_prev), p_prev)
+        hk = grad_descent(psi, grad_psi, 0, eps=1e-11)
         xk = x_prev + hk * p_prev
         iteration_callback(x=xk, iteration_no=k)
         wk = -f_grad(xk)
 
-        if np.linalg.norm(wk) < eps:
+        if abs(np.linalg.norm(wk)) < eps:
             return xk
 
         if k % 100 == 0:
