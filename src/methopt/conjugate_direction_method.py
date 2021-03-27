@@ -1,6 +1,7 @@
 import numpy as np
 
 from methopt.grad_descent import grad_descent
+from methopt.step_adjustment_strategy import DivideStepStrategy
 
 
 def conjugate_direction_method_for_quadratic(
@@ -57,7 +58,7 @@ def conjugate_direction_method(
     x0,
     max_iterations_count=1000,
     iteration_callback=None,
-    eps=1e-7,  # Search accuracy
+    eps=1e-3,  # Search accuracy
     **kwargs,
 ):
     if iteration_callback is None:
@@ -76,7 +77,14 @@ def conjugate_direction_method(
     for k in range(1, max_iterations_count):
         psi = lambda chi: f(x_prev + chi * p_prev)
         grad_psi = lambda chi: np.dot(f_grad(x_prev + chi * p_prev), p_prev)
-        hk = grad_descent(psi, grad_psi, 0, eps=1e-11)
+        hk = grad_descent(
+            psi,
+            grad_psi,
+            0,
+            initial_step=1e-3,
+            eps=1e-7,
+            step_adjustment_strategy=DivideStepStrategy(psi, grad_psi, eps=1e-11),
+        )
         xk = x_prev + hk * p_prev
         iteration_callback(x=xk, iteration_no=k)
         wk = -f_grad(xk)

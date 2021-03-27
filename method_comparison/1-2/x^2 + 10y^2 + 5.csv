@@ -1,0 +1,4 @@
+method,time,iter
+newtons_method,0.0003,3
+grad_descent,0.0009,50
+conjugate_direction_method,0.0054,6
