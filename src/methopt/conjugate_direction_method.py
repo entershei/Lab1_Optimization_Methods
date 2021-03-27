@@ -58,6 +58,7 @@ def conjugate_direction_method(
     max_iterations_count=1000,
     iteration_callback=None,
     eps=1e-7,  # Search accuracy
+    **kwargs,
 ):
     if iteration_callback is None:
         iteration_callback = lambda **kwargs: ()

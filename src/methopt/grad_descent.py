@@ -13,6 +13,7 @@ def grad_descent(
     eps=None,
     stopping_criterion=None,
     iteration_callback=None,
+    **kwargs,
 ):
     """Find an approximation of a local minimum of the function.
 
