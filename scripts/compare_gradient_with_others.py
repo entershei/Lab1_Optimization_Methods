@@ -7,7 +7,7 @@ from methopt.conjugate_direction_method import conjugate_direction_method
 from methopt.grad_descent import grad_descent
 from methopt.newtons_method import newtons_method
 
-ITERATION_CNT = 3
+ITERATION_CNT = 100
 
 methods = {
     "newtons_method": newtons_method,
@@ -16,63 +16,16 @@ methods = {
 }
 
 
-def time_cnt(**kwargs):
-    passed_kwargs = {name: kwargs[name] for name in ["f", "f_H", "f_grad", "x0"]}
-    if "method" in kwargs:
-        method = kwargs["method"]
-        return round(
-            timeit(
-                f"{method.__name__}(f=f, f_H=f_H, f_grad=f_grad, x0=x0)",
-                setup=f"from methopt.{method.__name__} import {method.__name__}",
-                number=ITERATION_CNT,
-                globals=passed_kwargs,
-            )
-            / ITERATION_CNT,
-            3,
+def time_cnt(method, **kwargs):
+    return round(
+        timeit(
+            f"method(f=f, f_H=f_H, f_grad=f_grad, x0=x0, eps=eps)",
+            number=ITERATION_CNT,
+            globals={"method": method, **kwargs},
         )
-    else:
-        print(
-            "newtons_method",
-            round(
-                timeit(
-                    "newtons_method(f=f, f_H=f_H, f_grad=f_grad, x0=x0)",
-                    setup="from methopt.newtons_method import newtons_method",
-                    number=ITERATION_CNT,
-                    globals=passed_kwargs,
-                )
-                / ITERATION_CNT,
-                3,
-            ),
-            "s",
-        )
-        print(
-            "conjugate directions",
-            round(
-                timeit(
-                    "conjugate_direction_method(f=f, f_H=f_H, f_grad=f_grad, x0=x0)",
-                    setup="from methopt.conjugate_direction_method import conjugate_direction_method",
-                    number=ITERATION_CNT,
-                    globals=passed_kwargs,
-                )
-                / ITERATION_CNT,
-                3,
-            ),
-            "s",
-        )
-        print(
-            "grad_descent",
-            round(
-                timeit(
-                    "grad_descent(f=f, f_H=f_H, f_grad=f_grad, x0=x0)",
-                    setup="from methopt.grad_descent import grad_descent",
-                    number=ITERATION_CNT,
-                    globals=passed_kwargs,
-                )
-                / ITERATION_CNT,
-                3,
-            ),
-            "s",
-        )
+        / ITERATION_CNT,
+        4,
+    )
 
 
 # @profile needed for manual launch and memory profiling
@@ -82,19 +35,14 @@ def mem_cnt(**kwargs):
     return memory_usage((method, (), passed_kwargs), interval=0.001, max_usage=True)
 
 
-def iter_cnt(**kwargs):
+def iter_cnt(method, **kwargs):
     counter = 0
 
     def inc(**kwargs):
         nonlocal counter
         counter += 1
 
-    iteration_callback = inc
-
-    method = kwargs["method"]
-    passed_kwargs = {name: kwargs[name] for name in ["f", "f_H", "f_grad", "x0"]}
-    passed_kwargs["iteration_callback"] = iteration_callback
-    res = method(**passed_kwargs)
+    res = method(**kwargs, iteration_callback=inc)
     # print(res) ## check for convergence
     return counter
 
@@ -148,18 +96,16 @@ if __name__ == "__main__":
             ) as table:
                 writer = csv.DictWriter(table, fieldnames=["method", "time", "iter"])
                 writer.writeheader()
-                for method_name in methods:
-                    cur_time = time_cnt(
-                        method=methods[method_name],
-                        formula=formula,
-                        f=f,
-                        f_grad=f_grad,
-                        f_H=f_H,
-                        x0=x0,
-                    )
-                    cur_cnt = iter_cnt(
-                        method=methods[method_name], f=f, f_grad=f_grad, f_H=f_H, x0=x0
-                    )
+                kwargs = {
+                    "f": f,
+                    "f_grad": f_grad,
+                    "f_H": f_H,
+                    "x0": x0,
+                    "eps": 1e-3,
+                }
+                for method_name, method in methods.items():
+                    cur_time = time_cnt(method, **kwargs)
+                    cur_cnt = iter_cnt(method, **kwargs)
                     writer.writerow(
                         {"method": method_name, "time": cur_time, "iter": cur_cnt}
                     )
