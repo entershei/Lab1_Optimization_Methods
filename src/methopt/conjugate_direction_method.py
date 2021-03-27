@@ -92,11 +92,7 @@ def conjugate_direction_method(
         if abs(np.linalg.norm(wk)) < eps:
             return xk
 
-        if k % 100 == 0:
-            p_prev = wk
-            continue
-
-        yk = np.dot(wk - w_prev, wk) / np.dot(wk, wk)
+        yk = max(0, np.dot(wk - w_prev, wk) / np.dot(wk, wk))
         pk = wk + yk * p_prev
         p_prev = pk
         w_prev = wk

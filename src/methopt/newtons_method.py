@@ -57,7 +57,7 @@ def newtons_method(
         xk = x_prev + step * x_wave
         iteration_callback(x=xk, iteration_no=k)
         fk = f(xk)
-        if np.all(abs(x_prev - xk) < eps):
+        if np.linalg.norm(x_prev - xk) < eps:
             return xk
         x_prev = xk
         f_prev = fk
