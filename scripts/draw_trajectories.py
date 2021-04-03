@@ -1,5 +1,6 @@
 import os
 import itertools
+import uuid
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,7 +28,7 @@ def in_limits(point) -> bool:
 
 
 def escape_filename(filename: str) -> str:
-    return filename.replace("/", " div ")
+    return str(uuid.uuid5(uuid.NAMESPACE_X500, filename))
 
 
 def draw_trajectory_with_method(method, marker, **kwargs):
